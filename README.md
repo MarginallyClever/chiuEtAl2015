@@ -11,12 +11,12 @@ Todo:
 - output results to JPG, DXF?
 - tweakable parameters while running?
 
-![a](a.jpg "A")
+![a](a.JPG "A")
 
-![b](b.jpg "B")
+![b](b.JPG "B")
 
-![c](c.jpg "C")
+![c](c.JPG "C")
 
-![d](d.jpg "D")
+![d](d.JPG "D")
 
-![e](e.jpg "E")
+![e](e.JPG "E")

@@ -1,6 +1,6 @@
 # chiuEtAl2015
 
-Implementation of [Chiu_et_al-2015-Computer_Graphics_Forum.pdf]
+Implementation of http://cgv.cs.nthu.edu.tw/projects/Recreational_Graphics/CircularScribbleArt
 
 Adjust parameters in setup() to see different effects.
 

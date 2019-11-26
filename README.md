@@ -1,4 +1,4 @@
-!(cover.jpg)
+![cover](cover.jpg "Chiu Et Al 2015")
 
 # chiuEtAl2015
 
@@ -11,12 +11,12 @@ Todo:
 - output results to JPG, DXF?
 - tweakable parameters while running?
 
-!(a.jpg)
+![a](a.jpg "A")
 
-!(b.jpg)
+![b](b.jpg "B")
 
-!(c.jpg)
+![c](c.jpg "C")
 
-!(d.jpg)
+![d](d.jpg "D")
 
-!(e.jpg)
+![e](e.jpg "E")

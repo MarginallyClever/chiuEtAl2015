@@ -40,12 +40,12 @@ void setup() {
   
   
   // CHANGE ME: parameters here control each step
-  wangTiles = new WangTiles(5000);  // number of points to put on the image.
+  wangTiles = new WangTiles(20000);  // number of points to put on the image.
   kMeans = new KMeans(14,20,30);  // sqrt(clusters)[14],M(1...40)[20],max iterations
   kernighanLin = new Kernighan_Lin();
   delaunayTriangulation = new DelaunayTriangulation(); 
-  scribbler = new CircularScribbler(0.5,25,5);  // angular velocity radians [0.5], max spiral radius [15], minimum spiral radius [0.5]
-  writeGCode = new WriteGCode("output.ngc");
+  scribbler = new CircularScribbler(0.5,25,3);  // angular velocity radians [0.5], max spiral radius [15], minimum spiral radius [0.5]
+  writeGCode = new WriteGCode("output.ngc");  // where to write the gcode.
   mode=0;
   wangTiles.prepare();
 }

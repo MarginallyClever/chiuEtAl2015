@@ -8,8 +8,9 @@ class WriteGCode {
   double zUp=90;
   double zDown=40;
   // A2 size is 420x592mm
-  double paperWidth=42;
-  double paperHeight=59.4;
+  double paperWidth=420;
+  double paperHeight=594;
+  double paperMargin=0.9;  // 0.9=90% drawable or 10% border
   
   WriteGCode(String outputName) {
     filename=outputName;
@@ -64,10 +65,10 @@ class WriteGCode {
   }
   
   double tx(double x) {
-    return (x-width/2)*(paperWidth/width);
+    return (x-width/2)*(paperWidth/width)*paperMargin;
   }
   
   double ty(double y) {
-    return (height/2-y)*(paperWidth/width);
+    return (height/2-y)*(paperWidth/width)*paperMargin;
   }
 };

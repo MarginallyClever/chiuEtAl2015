@@ -19,31 +19,33 @@ KMeans kMeans;
 Kernighan_Lin kernighanLin;
 DelaunayTriangulation delaunayTriangulation; 
 CircularScribbler scribbler;
+WriteGCode writeGCode;
 int mode;
 
 // METHODS
 
 void setup() {
-  
   smooth(2);
+  noFill();
   
   // CHANGE ME: choose any one of these for a starter image.
   //size(512,512);  img = loadImage("lenna.png");
   //size(668,668);  img = loadImage("cropped.jpg");
-  //size(608,608);  img = loadImage("mona-lisa.jpg");
+  size(608,608);  img = loadImage("mona-lisa.jpg");
   //size(648,648);  img = loadImage("morenaBaccarin.jpg");
-  size(588,730);  img = loadImage("phillipineEagle.jpg");
+  //size(588,730);  img = loadImage("phillipineEagle.jpg");
   //size(956,956);  img = loadImage("shortHair.jpg");
   
   img.filter(GRAY);
   
   
-  wangTiles = new WangTiles(20000);  // number of points to put on the image.
+  // CHANGE ME: parameters here control each step
+  wangTiles = new WangTiles(5000);  // number of points to put on the image.
   kMeans = new KMeans(14,20,30);  // sqrt(clusters)[14],M(1...40)[20],max iterations
   kernighanLin = new Kernighan_Lin();
   delaunayTriangulation = new DelaunayTriangulation(); 
-  scribbler = new CircularScribbler(0.5,15,0.5);  // angular velocity radians [0.5], max spiral radius [15], minimum spiral radius [0.5]
-
+  scribbler = new CircularScribbler(0.5,25,5);  // angular velocity radians [0.5], max spiral radius [15], minimum spiral radius [0.5]
+  writeGCode = new WriteGCode("output.ngc");
   mode=0;
   wangTiles.prepare();
 }
@@ -91,7 +93,7 @@ float sampleImageAt(int x,int y) {
 float toneControl(float x) {
   float v = 0.017 * exp(3.29*x)
            +0.005 * exp(7.27*x);
-  return min(255.0/256.0,max(0,v));
+  return min(1.0,max(0,v));
 }
 
 
@@ -102,7 +104,7 @@ float sampleLuminosity(int x,int y) {
   // 1 3 1 = 5
   //       = 21
   float sum=0;
-  float count=0;
+  float count=0;/*
   
   if(x>0) {
     if(y>0       ) { sum += sampleImageAt(x-1,y-1) * 1.0;  count+=1; }
@@ -110,33 +112,31 @@ float sampleLuminosity(int x,int y) {
     if(y<height-1) { sum += sampleImageAt(x-1,y+1) * 1.0;  count+=1; }
   }
   // middle
-    if(y>0       ) { sum += sampleImageAt(x  ,y-1) * 3.0;  count+=3; }
-                   { sum += sampleImageAt(x  ,y  ) * 5.0;  count+=5; }
+    if(y>0       ) { sum += sampleImageAt(x  ,y-1) * 3.0;  count+=3; }*/
+                   { sum += sampleImageAt(x  ,y  ) * 5.0;  count+=5; }/*
     if(y<height-1) { sum += sampleImageAt(x  ,y+1) * 3.0;  count+=3; }
   // bottom
   if(x<width-1) {
     if(y>0       ) { sum += sampleImageAt(x+1,y-1) * 1.0;  count+=1; }
                    { sum += sampleImageAt(x+1,y  ) * 3.0;  count+=3; }
     if(y<height-1) { sum += sampleImageAt(x+1,y+1) * 1.0;  count+=1; }
-  }
+  }*/
   
   return toneControl(sum/count)*255.0;
 }
 
 
 void draw() {
-  image(img,0,0);
-  
-  noFill();
-    
   switch(mode) {
     case 0:
+      image(img,0,0);
       if(wangTiles.step()) wangTiles.render();
       else {
         kMeans.prepare(wangTiles.pointsOut);
         mode++;
       }
     case 1:
+      image(img,0,0);
       if(kMeans.step()) kMeans.render();
       else {
         kMeans.finish();
@@ -145,6 +145,7 @@ void draw() {
       }
       break;
     case 2:
+      image(img,0,0);
       // this mode is instantaneous
       while(delaunayTriangulation.step());
       /*
@@ -159,6 +160,7 @@ void draw() {
       }
       break;
     case 3:
+      image(img,0,0);
       if(kernighanLin.step()) {
         kernighanLin.render();
         //delaunayTriangulation.render();
@@ -174,8 +176,21 @@ void draw() {
       } else {
         // done
         scribbler.finish();
-        // write to jpg/gcode/dxf?  needs an output class.
+        writeGCode.prepare(scribbler.pointsOut);
+        mode++;
       }
+      break;
+    case 5:
+      // write to jpg/gcode/dxf?  needs an output class.
+      if(writeGCode.step()) {
+        //scribbler.render();
+      } else {
+        writeGCode.finish();
+        mode++;
+      }
+      break;
+    default:
+      scribbler.render();
       break;
   }
 }

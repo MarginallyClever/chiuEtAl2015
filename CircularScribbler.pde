@@ -11,10 +11,10 @@ class CircularScribbler {
   // CONSTANTS 
   
   // angular velocity in radians. 'ω' in the literature.  Best when >0 and <1.
-  float ANGULAR_VELOCITY_RAD=0.5;
+  float ANGULAR_VELOCITY_RAD=0.25;
   // max/min radius for scribble
-  float RMAX=15;
-  float RMIN=2;
+  float RMAX=25;
+  float RMIN=5;
   // max/min center velocity for scribble.  Best when center velocity < angular velocity
   float CVMAX=PI*2*ANGULAR_VELOCITY_RAD;
   float CVMIN=CVMAX/20;
@@ -34,6 +34,9 @@ class CircularScribbler {
   
   CircularScribbler(float angularVelocityRadians,float rMax,float rMin) {
     ANGULAR_VELOCITY_RAD =angularVelocityRadians;
+    CVMAX=PI*2*ANGULAR_VELOCITY_RAD;
+    CVMIN=CVMAX/30;
+    
     RMAX=rMax;
     RMIN=rMin;
   }
@@ -125,6 +128,7 @@ class CircularScribbler {
   }
   
   void finish() {
+    /*
     background(255);
     strokeWeight(1);
     stroke(0,0,0,64);
@@ -136,5 +140,6 @@ class CircularScribbler {
       }
       prev=pk;
     }
+    */
   }
 }

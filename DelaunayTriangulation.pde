@@ -48,10 +48,10 @@ class DelaunayTriangulation {
   }
 
   void prepare(ArrayList<Point2D> arg0) {
-    if (arg0.size()<3) return;
     println("DelaunayTriangulation begin");
-
+    if (arg0.size()<3) return;
     pointsIn=arg0;
+    
     triangles = new ArrayList<Triangle2D>();
     edges = new ArrayList<Edge2D>();
 

@@ -14,16 +14,39 @@ class Kernighan_Lin {
     println("Kernighan_Lin begin");
     dt = dt0;
     pointsIn = arg0;
-
-    pointsOut = new ArrayList<Point2D>();
-    for (Point2D p : pointsIn ) {
-      pointsOut.add(p);
-    }
-
-    java.util.Collections.sort(pointsOut);
     
-    KLi=0;
-    mode=0;
+    pointsOut = new ArrayList<Point2D>();
+      
+    File f = new File(sketchPath("kernighanLin.txt"));
+    if(f.exists()) {
+      // read in the points from the file
+      BufferedReader reader = createReader(sketchPath("kernighanLin.txt"));
+      String line = null;
+      try {
+        while ((line = reader.readLine()) != null) {
+          String[] pieces = split(line, TAB);
+          int x = int(pieces[0]);
+          int y = int(pieces[1]);
+          pointsOut.add(new Point2D(x, y));
+        }
+        reader.close();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+      
+      KLi=dt.pointsIn.size();
+      mode=1;
+    } else {
+      // does not exists
+      for (Point2D p : pointsIn ) {
+        pointsOut.add(p);
+      }
+
+      java.util.Collections.sort(pointsOut);
+    
+      KLi=0;
+      mode=0;
+    }
   }
 
   void render() {
@@ -241,53 +264,6 @@ class Kernighan_Lin {
     }
     println("    ...done.");
   }
-  
-  
-  // our points are drawn in the old numerical order.
-  // the changed list of edges can be used to calculate the new numerical order.
-  // every point is connected with two edges.  every egde with two points.
-  // take p0, the first point of the first line
-  // while( connections is not empty ) {
-  //   add p0 to the new list.
-  //   find e, the first edge attached to p0
-  //   remove e from connections.
-  //   find p1, the point in e that is not p0
-  //   make p0=p1
-  // };
-  void finish() {
-    println("  finish() "+connections.size());
-    testEveryPointHasExactlyTwoEdges();
-    
-    ArrayList<Point2D> newList = new ArrayList<Point2D>();
-    Point2D p0 = connections.get(0).a;
-    //connections.remove(0);
-    
-    // the KL solution should be one continuous loop.  Count how many loops were made
-    int [] hit = new int[pointsOut.size()];
-    int loopID=1;
-    int hitCount=0;
-        
-    while(!connections.isEmpty()) {
-      hitCount++;
-      hit[pointsOut.indexOf(p0)]=loopID;
-      newList.add(p0);
-      Edge2D e = findEdgeWithPoint(p0);
-      connections.remove(e);
-      if(e==null) {
-        println("  finish panic "+hitCount+" ("+loopID+")");
-        p0 = connections.get(0).a;
-        loopID++;
-      } else {
-        Point2D p1 = (e.a==p0) ? e.b : e.a;
-        p0=p1;
-      }
-    }
-    
-    println("  "+(int)(loopID)+" loops.");
-    
-    // replace the old list
-    pointsOut = newList;
-  }
 
   boolean stepOptimize() {
     //println("test "+KLi);
@@ -343,5 +319,63 @@ class Kernighan_Lin {
     }
 
     return found>0;
+  }
+  
+  // our points are drawn in the old numerical order.
+  // the changed list of edges can be used to calculate the new numerical order.
+  // every point is connected with two edges.  every edge with two points.
+  // take p0, the first point of the first line
+  // while( connections is not empty ) {
+  //   add p0 to the new list.
+  //   find e, the first edge attached to p0
+  //   remove e from connections.
+  //   find p1, the point in e that is not p0
+  //   make p0=p1
+  // };
+  void finish() {
+    println("  finish() ");
+    if(connections==null || connections.size()==0) return;
+    
+    testEveryPointHasExactlyTwoEdges();
+    
+    ArrayList<Point2D> newList = new ArrayList<Point2D>();
+    Point2D p0 = connections.get(0).a;
+    //connections.remove(0);
+    
+    // the KL solution should be one continuous loop.  Count how many loops were made
+    int [] hit = new int[pointsOut.size()];
+    int loopID=1;
+    int hitCount=0;
+        
+    while(!connections.isEmpty()) {
+      hitCount++;
+      hit[pointsOut.indexOf(p0)]=loopID;
+      newList.add(p0);
+      Edge2D e = findEdgeWithPoint(p0);
+      connections.remove(e);
+      if(e==null) {
+        println("  finish panic "+hitCount+" ("+loopID+")");
+        p0 = connections.get(0).a;
+        loopID++;
+      } else {
+        Point2D p1 = (e.a==p0) ? e.b : e.a;
+        p0=p1;
+      }
+    }
+    newList.add(p0);
+    
+    println("  "+(int)(loopID)+" loops.");
+    
+    // replace the old list
+    pointsOut = newList;
+
+    // write
+    println("Writing "+newList.size()+" points.");
+    PrintWriter output = createWriter(sketchPath("kernighanLin.txt"));
+    for( Point2D p : newList ) {
+      output.println(p.x+"\t"+p.y);
+    }
+    output.flush();
+    output.close();
   }
 }

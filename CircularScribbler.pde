@@ -28,7 +28,8 @@ class CircularScribbler {
   int pi;
   // last angle (to connect scribbles)
   float angle=0;
-  
+
+  int drawFirst,drawLast;
 
   // METHODS
   
@@ -41,30 +42,36 @@ class CircularScribbler {
     RMIN=rMin;
   }
 
-  void prepare(ArrayList<Point2D> newList) {
+  void prepare(ArrayList<Point2D> arg0) {
     println("CircularScribbler begin");
-    pointsIn = newList;
+    
+    pointsIn = arg0;
     pointsOut = new ArrayList<Point2D>();
     pi=0;
-  }
-  
-  void render() {
+    
     background(255);
     strokeWeight(1);
     stroke(0,0,0,64);
-
+  }
+  
+  void render() {
     Point2D prev=null;
-    for( Point2D pk : pointsOut ) {
+    for( int i = drawFirst;i<drawLast;++i) {
+      Point2D pk = pointsOut.get(i);
       if(prev!=null) {
         line(prev.x,prev.y,pk.x,pk.y);
       }
       prev=pk;
     }
+    drawFirst=0;
+    drawLast=pointsOut.size();
   }
   
   boolean step() {
     int count = pointsIn.size()/200;
     
+    drawFirst=pointsOut.size();
+
     int ps=pointsIn.size();
     for(int i=0;i<count;++i) {
       if(pi<ps) {
@@ -72,6 +79,8 @@ class CircularScribbler {
         pi++;
       }
     }
+    
+    drawLast=pointsOut.size();
     
     println("  "+((float)(ps-pi)*100.0/(float)ps)+"%");
     return (pi<ps);

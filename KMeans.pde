@@ -14,7 +14,7 @@ class KMeans {
   float S; 
   int iterations;
 
-  ArrayList<Point2D> pointsIn, pointsOut;
+  private ArrayList<Point2D> pointsIn, pointsOut;
   ArrayList<Point2D> clustersOut;
   
   
@@ -32,21 +32,60 @@ class KMeans {
   
     pointsIn = arg0;
     pointsOut = new ArrayList<Point2D>();
-    for(int j=0;j<pointsIn.size();++j) {
-      pointsOut.add(new Point2D(pointsIn.get(j)));
-    }
-    
     clustersOut = new ArrayList<Point2D>();
-    int j=0;
-    int c = (int)sqrt(NUM_CLUSTERS);
-    float w = width/(float)c;
-    float h = height/(float)c;
-    for(int y=0;y<c;++y) {
-      for(int x=0;x<c;++x) {
-        clustersOut.add(new Point2D(x*w+w/2,y*h+h/2,j++));
+  
+    File f0=new File(sketchPath("kMeansPoints.txt"));
+    File f1=new File(sketchPath("kMeansClusters.txt"));
+    if(f0.exists() && f1.exists()) {
+      // read in the points
+      BufferedReader reader;
+      String line = null;
+      
+      reader = createReader(sketchPath("kMeansPoints.txt"));
+      try {
+        while ((line = reader.readLine()) != null) {
+          String[] pieces = split(line, TAB);
+          float x = float(pieces[0]);
+          float y = float(pieces[1]);
+          int c = int(pieces[1]);
+          pointsOut.add(new Point2D(x, y, c));
+        }
+        reader.close();
+      } catch (IOException e) {
+        e.printStackTrace();
       }
+      
+      reader = createReader(sketchPath("kMeansClusters.txt"));
+      try {
+        while ((line = reader.readLine()) != null) {
+          String[] pieces = split(line, TAB);
+          int x = int(pieces[0]);
+          int y = int(pieces[1]);
+          clustersOut.add(new Point2D(x, y));
+        }
+        reader.close();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+      
+      
+      iterations=0;
+    } else {
+      for(int j=0;j<pointsIn.size();++j) {
+        pointsOut.add(new Point2D(pointsIn.get(j)));
+      }
+      
+      int j=0;
+      int c = (int)sqrt(NUM_CLUSTERS);
+      float w = width/(float)c;
+      float h = height/(float)c;
+      for(int y=0;y<c;++y) {
+        for(int x=0;x<c;++x) {
+          clustersOut.add(new Point2D(x*w+w/2,y*h+h/2,j++));
+        }
+      }
+      iterations=MAX_ITERATIONS;
     }
-    iterations=MAX_ITERATIONS;
   }
   
   void render() {
@@ -156,5 +195,22 @@ class KMeans {
     }
     pointsOut.removeAll(pointsToRemove);
     clustersOut.removeAll(clustersToRemove);
+  
+    // write to disk
+    PrintWriter output;
+    
+    output = createWriter(sketchPath("kMeansPoints.txt"));
+    for( Point2D p : pointsOut ) {
+      output.println(p.x+"\t"+p.y);
+    }
+    output.flush();
+    output.close();
+    
+    output = createWriter(sketchPath("kMeansClusters.txt"));
+    for( Point2D p : clustersOut ) {
+      output.println(p.x+"\t"+p.y+"\t"+p.cluster);
+    }
+    output.flush();
+    output.close();
   }
 }

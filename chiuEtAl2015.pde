@@ -31,21 +31,24 @@ void setup() {
   // CHANGE ME: choose any one of these for a starter image.
   //size(512,512);  img = loadImage("lenna.png");
   //size(668,668);  img = loadImage("cropped.jpg");
-  size(608,608);  img = loadImage("mona-lisa.jpg");
+  //size(608,608);  img = loadImage("mona-lisa.jpg");
   //size(648,648);  img = loadImage("morenaBaccarin.jpg");
   //size(588,730);  img = loadImage("phillipineEagle.jpg");
-  //size(956,956);  img = loadImage("shortHair.jpg");
+  size(956,956);  img = loadImage("shortHair.jpg");
   
   img.filter(GRAY);
   
   
   // CHANGE ME: parameters here control each step
-  wangTiles = new WangTiles(20000);  // number of points to put on the image.
+  wangTiles = new WangTiles(40000);  // number of points to put on the image.
   kMeans = new KMeans(14,20,30);  // sqrt(clusters)[14],M(1...40)[20],max iterations
-  kernighanLin = new Kernighan_Lin();
   delaunayTriangulation = new DelaunayTriangulation(); 
-  scribbler = new CircularScribbler(0.5,25,3);  // angular velocity radians [0.5], max spiral radius [15], minimum spiral radius [0.5]
+  kernighanLin = new Kernighan_Lin();
+  scribbler = new CircularScribbler(0.15,25,5);  // angular velocity radians, max spiral radius, minimum spiral radius
   writeGCode = new WriteGCode("output.ngc");  // where to write the gcode.
+  
+  File f;
+
   mode=0;
   wangTiles.prepare();
 }
@@ -132,6 +135,8 @@ void draw() {
       image(img,0,0);
       if(wangTiles.step()) wangTiles.render();
       else {
+        wangTiles.finish();
+        //wangTiles=null;
         kMeans.prepare(wangTiles.pointsOut);
         mode++;
       }
@@ -140,6 +145,7 @@ void draw() {
       if(kMeans.step()) kMeans.render();
       else {
         kMeans.finish();
+        //kMeans=null;
         delaunayTriangulation.prepare(kMeans.clustersOut);
         mode++;
       }

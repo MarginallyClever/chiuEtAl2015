@@ -51,7 +51,7 @@ class CircularScribbler {
     
     background(255);
     strokeWeight(1);
-    stroke(0,0,0,64);
+    stroke(0);
   }
   
   void render() {

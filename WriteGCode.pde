@@ -53,6 +53,10 @@ class WriteGCode {
         index++;
       }
     }
+    
+    float percent = index*100.0/size;
+    f.println("M117 "+nf(percent,3,2)+"%");
+    
     return index<size;
   }
   
@@ -64,11 +68,13 @@ class WriteGCode {
     println("Writing done.");
   }
   
-  double tx(double x) {
-    return (x-width/2)*(paperWidth/width)*paperMargin;
+  String tx(double x) {
+    float v=(float)( (x-width/2)*(paperWidth/width)*paperMargin ); 
+    return nf(v,0,2);
   }
   
-  double ty(double y) {
-    return (height/2-y)*(paperWidth/width)*paperMargin;
+  String ty(double y) {
+    float v =(float)( (height/2-y)*(paperWidth/width)*paperMargin );
+    return nf(v,0,2);
   }
 };

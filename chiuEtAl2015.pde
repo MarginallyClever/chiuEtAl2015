@@ -25,30 +25,27 @@ int mode;
 // METHODS
 
 void setup() {
-  smooth(2);
-  noFill();
-  
-  // CHANGE ME: choose any one of these for a starter image.
-  size(512,512);  img = loadImage("lenna.png");
+  // CHANGE ME: choose any one of these for a starter image, or use your own.
+  // The size(x,y) should match the size of your image.
+  size(267,266);  img = loadImage("mandrill.jpg");
   //size(668,668);  img = loadImage("cropped.jpg");
   //size(608,608);  img = loadImage("mona-lisa.jpg");
   //size(648,648);  img = loadImage("morenaBaccarin.jpg");
   //size(588,730);  img = loadImage("phillipineEagle.jpg");
   //size(956,956);  img = loadImage("shortHair.jpg");
   
-  img.filter(GRAY);
-  
-  
   // CHANGE ME: parameters here control each step
-  wangTiles = new WangTiles(3);  // number of points to put on the image.
-  kMeans = new KMeans(14,20,30);  // sqrt(clusters)[14],M(1...40)[20],max iterations
+  wangTiles = new WangTiles(3);  // Minimum distance between points. Smaller numbers= more points.
+  kMeans = new KMeans(14,20,30);  // sqrt(clusters)[14],M(1...40)[20],max iterations.  Probably don't change this.
   delaunayTriangulation = new DelaunayTriangulation(); 
   kernighanLin = new Kernighan_Lin();
-  scribbler = new CircularScribbler(0.5,25,2);  // angular velocity radians, max spiral radius, minimum spiral radius
-  writeGCode = new WriteGCode("output.ngc");  // where to write the gcode.
+  scribbler = new CircularScribbler(0.5,25,2);  // Drawing controls.  Angular velocity (radians), max spiral radius, minimum spiral radius
+  writeGCode = new WriteGCode("output.ngc");  // where to write the gcode.  More options in the WriteGCode tab.
   
-  File f;
-
+  
+  smooth(2);
+  noFill();
+  img.filter(GRAY);
   mode=0;
   wangTiles.prepare();
 }

@@ -4,13 +4,13 @@ class WriteGCode {
   PrintWriter f; 
   int index;
   
-  // pen angles
+  // CHANGE ME: pen angles for up and down.
   double zUp=90;
   double zDown=40;
-  // A2 size is 420x592mm
+  // CHANGE ME: A2 size is 420x592mm
   double paperWidth=420;
-  double paperHeight=594;
-  double paperMargin=0.9;  // 0.9=90% drawable or 10% border
+  double paperHeight=592;
+  double paperMargin=0.9;  // CHANGE ME: 0.9=90% drawable or 10% border
   
   WriteGCode(String outputName) {
     filename=outputName;

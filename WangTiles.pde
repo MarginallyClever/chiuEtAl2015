@@ -1,3 +1,13 @@
+// Code to stipple the image.
+// Currently uses a Poisson disk to distribute points evenly over the image.
+// Each point P is then evaluated for luminosity like so
+//   L(P) <= random(255)
+// and if they pass the test they are removed from the list.
+// this tends to reject points in more lightly colored areas.
+//
+// The name of the file is WangTiles because they are the ideal right now in stippling technology.
+// I don't have that system yet, but it would leave white areas completely empty.
+
 class PoissonDisk {
   boolean isValidPoint(Point2D[][] grid, float cellsize,
                        int gwidth, int gheight,
@@ -130,7 +140,7 @@ class WangTiles {
       
       ArrayList<Point2D> toRemove = new ArrayList<Point2D>();
       for(Point2D p : pointsOut ) {
-        if(sampleLuminosity((int)p.x,(int)p.y)<random(255)) {
+        if(sampleLuminosity((int)p.x,(int)p.y)<=random(255)) {
           toRemove.add(p);
         }
       }

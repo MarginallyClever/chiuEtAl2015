@@ -31,9 +31,28 @@ class WriteGCode {
         paperWidth = testHeight*width/height;
       }
     }
+    
+    // write out gcode to trace the edge of the drawing
+    println("Writing border.ngc");
+    PrintWriter f = createWriter("border.ngc");
+    f.println("; "+year()+"-"+month()+"-"+day()+" chiuEtAl2015");
+    f.println("G28");
+    f.println("G0 Z"+zUp);
+    f.println("G0 X"+tx(    0)+" Y"+ty(     0)+"");
+    f.println("G0 Z"+zDown);
+    f.println("G0 X"+tx(width)+" Y"+ty(     0)+"");
+    f.println("G0 X"+tx(width)+" Y"+ty(height)+"");
+    f.println("G0 X"+tx(    0)+" Y"+ty(height)+"");
+    f.println("G0 X"+tx(    0)+" Y"+ty(     0)+"");
+    f.println("G0 Z"+zUp);
+    f.flush();
+    f.close();
+    
+    // now start writing the gcode for the drawing
     println("Writing to "+filename);
     f = createWriter(filename);
     f.println("; "+year()+"-"+month()+"-"+day()+" chiuEtAl2015");
+    f.println("G28");
     f.println("G0 Z"+zUp);
     index=0;
   }

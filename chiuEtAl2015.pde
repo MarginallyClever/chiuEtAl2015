@@ -27,7 +27,8 @@ int mode;
 void setup() {
   // CHANGE ME: choose any one of these for a starter image, or use your own.
   // The size(x,y) should match the size of your image.
-  size(267,266);  img = loadImage("mandrill.jpg");
+  //size(267,266);  img = loadImage("mandrill.jpg");
+  size(2000,1266);  img = loadImage("2JOOhneHimmel.jpg");
   //size(668,668);  img = loadImage("cropped.jpg");
   //size(608,608);  img = loadImage("mona-lisa.jpg");
   //size(648,648);  img = loadImage("morenaBaccarin.jpg");
@@ -35,7 +36,7 @@ void setup() {
   //size(956,956);  img = loadImage("shortHair.jpg");
   
   // CHANGE ME: parameters here control each step
-  wangTiles = new WangTiles(3);  // Minimum distance between points. Smaller numbers= more points.
+  wangTiles = new WangTiles(5);  // Minimum distance between points. Smaller numbers= more points.
   kMeans = new KMeans(14,20,30);  // sqrt(clusters)[14],M(1...40)[20],max iterations.  Probably don't change this.
   delaunayTriangulation = new DelaunayTriangulation(); 
   kernighanLin = new Kernighan_Lin();
@@ -122,7 +123,8 @@ float sampleLuminosity(int x,int y) {
     if(y<height-1) { sum += sampleImageAt(x+1,y+1) * 1.0;  count+=1; }
   }*/
   
-  return toneControl(sum/count)*255.0;
+  float v = toneControl(sum/count)*255.0;
+  return max(min(v,255),0);
 }
 
 

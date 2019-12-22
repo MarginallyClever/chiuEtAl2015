@@ -34,7 +34,7 @@ class WriteGCode {
     
     // write out gcode to trace the edge of the drawing
     println("Writing border.ngc");
-    PrintWriter f = createWriter("border.ngc");
+    f = createWriter("border.ngc");
     f.println("; "+year()+"-"+month()+"-"+day()+" chiuEtAl2015");
     f.println("G28");
     f.println("G0 Z"+zUp);

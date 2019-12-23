@@ -16,8 +16,8 @@ class CircularScribbler {
   float RMAX=25;
   float RMIN=5;
   // max/min center velocity for scribble.  Best when center velocity < angular velocity
-  float CVMAX=PI*2*ANGULAR_VELOCITY_RAD;
-  float CVMIN=CVMAX/20;
+  float CVMAX=1;
+  float CVMIN=0.5;
   
   
   // VARIABLES
@@ -33,10 +33,10 @@ class CircularScribbler {
 
   // METHODS
   
-  CircularScribbler(float angularVelocityRadians,float rMax,float rMin) {
-    ANGULAR_VELOCITY_RAD =angularVelocityRadians;
-    CVMAX=PI*2*ANGULAR_VELOCITY_RAD;
-    CVMIN=CVMAX/30;
+  CircularScribbler(float angularVelocityDegrees,float rMax,float rMin,float cvMax,float cvMin) {
+    ANGULAR_VELOCITY_RAD =radians(angularVelocityDegrees);
+    CVMAX = ANGULAR_VELOCITY_RAD * cvMax;
+    CVMIN = ANGULAR_VELOCITY_RAD * cvMin;
     
     RMAX=rMax;
     RMIN=rMin;
@@ -71,6 +71,7 @@ class CircularScribbler {
     int count = pointsIn.size()/200;
     
     drawFirst=pointsOut.size();
+    if(drawFirst>0) drawFirst--;
 
     int ps=pointsIn.size();
     for(int i=0;i<count;++i) {
@@ -88,12 +89,12 @@ class CircularScribbler {
 
   // convert luminosity value p[0...255] into radius [RMIN...RMAX]
   float luminosityToRadius(float p) {
-    return RMIN + ((255-p)/255.0) * (RMAX-RMIN);
+    return RMIN + (1.0f-p) * (RMAX-RMIN);
   }
   
   // convert luminosity value p[0...255] into center velocity [CVMIN...CVMAX]
   float luminosityToCenterVelocity(float p) {
-    return CVMIN + ((255-p)/255.0) * (CVMAX-CVMIN);
+    return CVMIN + (1.0f-p) * (CVMAX-CVMIN);
   }
   
   
@@ -119,7 +120,7 @@ class CircularScribbler {
       //print("\tt="+t);
       float cpx = a.x + t * dx;
       float cpy = a.y + t * dy;
-      float luminosity = sampleLuminosity((int)cpx,(int)cpy);  // along center of line
+      float luminosity = sampleLuminosity(cpx,cpy);  // along center of line
       //print("\tluminosity="+luminosity);
       cv = luminosityToCenterVelocity(luminosity);
       //print("\tcv="+cv);

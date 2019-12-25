@@ -39,12 +39,15 @@ void setup() {
   //size(956,956);  img = loadImage("shortHair.jpg");
   
   // CHANGE ME: parameters here control each step
-  wangTiles = new WangTiles(20000);  // Minimum distance between points. Smaller numbers= more points.
+  wangTiles = new WangTiles(20000);  // estimated maximum number of points
   kMeans = new KMeans(14,20,30);  // sqrt(clusters)[14],M(1...40)[20],max iterations.  Probably don't change this.
   delaunayTriangulation = new DelaunayTriangulation(); 
   kernighanLin = new Kernighan_Lin();
-  scribbler = new CircularScribbler(20,16,2,5,0.35);  // Drawing controls.  Angular velocity (degrees), max spiral radius, minimum spiral radius,max center velocity,min center velocity
-  writeGCode = new WriteGCode("output.ngc");  // where to write the gcode.  More options in the WriteGCode tab.
+  scribbler = new CircularScribbler(20,10,3,2.5,0.2);  // Drawing controls.  Angular velocity (degrees), max spiral radius, minimum spiral radius,max center velocity,min center velocity
+  // where to write the gcode, final width, final height,margin [0...1], pen up angle [0-180], pen down angle [0-180].
+  // Up and down values MUST match the values in your makelangelo robot settings > pen tab. 
+  // A2 size is 420x592mm
+  writeGCode = new WriteGCode("output.ngc",420,592,0.9,90,30);
   
   toneControlOn=true;
   

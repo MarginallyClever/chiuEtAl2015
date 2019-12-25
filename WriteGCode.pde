@@ -12,8 +12,24 @@ class WriteGCode {
   double paperHeight=592;
   double paperMargin=0.9;  // CHANGE ME: 0.9=90% drawable or 10% border
   
-  WriteGCode(String outputName) {
+  /**
+   * Setup parameters for the gcode.
+   * The image will be scaled to these dimensions, regardless of the original aspect ratio.
+   * The up and down values MUST match the values in your makelangelo robot settings.
+   * @param outputName name of file where gcode will be saved
+   * @param w width of output.
+   * @param h height of output.
+   * @param m margin %
+   * @param up z height when pen is up
+   * @param down z height when pen is down
+   */
+  WriteGCode(String outputName,double w,double h,double m,double up,double down) {
     filename=outputName;
+    paperWidth=w;
+    paperHeight=h;
+    paperMargin=m;
+    zUp=up;
+    zDown=down;
   }
   
   void prepare(ArrayList<Point2D> arg0) {

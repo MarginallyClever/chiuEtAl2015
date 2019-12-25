@@ -44,7 +44,9 @@ void setup() {
   delaunayTriangulation = new DelaunayTriangulation(); 
   kernighanLin = new Kernighan_Lin();
   scribbler = new CircularScribbler(20,10,3,2.5,0.2);  // Drawing controls.  Angular velocity (degrees), max spiral radius, minimum spiral radius,max center velocity,min center velocity
-  // where to write the gcode, final width, final height,margin [0...1], pen up angle [0-180], pen down angle [0-180].
+  // where to write the gcode, final width, final height,margin [0...1],
+  //   pen up angle [0-180], pen down angle [0-180].
+  //
   // Up and down values MUST match the values in your makelangelo robot settings > pen tab. 
   // A2 size is 420x592mm
   writeGCode = new WriteGCode("output.ngc",420,592,0.9,90,30);

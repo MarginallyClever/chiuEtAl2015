@@ -104,12 +104,14 @@ class WriteGCode {
   }
   
   String tx(double x) {
-    float v=(float)( (x-width/2)*(paperWidth/width)*paperMargin ); 
+    double fromCenter = x-((double)width/2.0);
+    float v=(float)( fromCenter ); 
     return nf(v,0,2);
   }
   
   String ty(double y) {
-    float v =(float)( (height/2-y)*(paperWidth/width)*paperMargin );
+    double fromCenter = ((double)height/2.0)-y;
+    float v=(float)( fromCenter ); 
     return nf(v,0,2);
   }
 };

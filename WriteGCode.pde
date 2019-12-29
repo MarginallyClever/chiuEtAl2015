@@ -23,11 +23,11 @@ class WriteGCode {
    * @param up z height when pen is up
    * @param down z height when pen is down
    */
-  WriteGCode(String outputName,double w,double h,double m,double up,double down) {
+  WriteGCode(String outputName,double up,double down) {
     filename=outputName;
-    paperWidth=w;
-    paperHeight=h;
-    paperMargin=m;
+    paperWidth=width;
+    paperHeight=height;
+    paperMargin=1;
     zUp=up;
     zDown=down;
   }

@@ -8,8 +8,8 @@ class WriteGCode {
   double zUp=90;
   double zDown=40;
   // CHANGE ME: A2 size is 420x592mm
-  double paperWidth=420;
-  double paperHeight=592;
+  double paperWidth=736;
+  double paperHeight=825;
   double paperMargin=0.9;  // CHANGE ME: 0.9=90% drawable or 10% border
   
   /**
@@ -55,12 +55,12 @@ class WriteGCode {
     f.println("G28");
     f.println("G0 Z"+zUp);
     f.println("G0 X"+tx(    0)+" Y"+ty(     0)+"");
-    f.println("G0 Z"+zDown);
+    f.println("G0 Z"+nf2(zDown,0,0));
     f.println("G0 X"+tx(width)+" Y"+ty(     0)+"");
     f.println("G0 X"+tx(width)+" Y"+ty(height)+"");
     f.println("G0 X"+tx(    0)+" Y"+ty(height)+"");
     f.println("G0 X"+tx(    0)+" Y"+ty(     0)+"");
-    f.println("G0 Z"+zUp);
+    f.println("G0 Z"+nf2(zUp,0,0));
     f.flush();
     f.close();
     
@@ -69,7 +69,7 @@ class WriteGCode {
     f = createWriter(filename);
     f.println("; "+year()+"-"+month()+"-"+day()+" chiuEtAl2015");
     f.println("G28");
-    f.println("G0 Z"+zUp);
+    f.println("G0 Z"+nf2(zUp,0,0);
     index=0;
   }
   
@@ -83,14 +83,14 @@ class WriteGCode {
         Point2D p = pointsIn.get(index);
         f.println("G0 X"+tx(p.x)+" Y"+ty(p.y));
         if(index==0) {
-          f.println("G0 Z"+zDown);
+          f.println("G0 Z"+nf2(zDown,0,0));
         }
         index++;
       }
     }
     
     float percent = index*100.0/size;
-    f.println("M117 "+nf(percent,3,2)+"%");
+    f.println("M117 "+nf2(percent,3,2)+"%");
     
     return index<size;
   }
@@ -106,12 +106,30 @@ class WriteGCode {
   String tx(double x) {
     double fromCenter = x-((double)width/2.0);
     float v=(float)( fromCenter ); 
-    return nf(v,0,2);
+    return nf2(v,0,2);
   }
   
   String ty(double y) {
     double fromCenter = ((double)height/2.0)-y;
     float v=(float)( fromCenter ); 
-    return nf(v,0,2);
+    return nf2(v,0,2);
   }
+  
+  // replace default nf() with one that doesn't add european conventions.
+  String nf2(double number,int left,int right) {
+    String result="";
+    int w = (int)Math.floor(number);
+    // pad left
+    for(int wLen = String.valueOf(w).length();wLen<left;wLen++) result+=" ";
+    // decimal
+    result+=".";
+    // pad right
+    double remainder = number - w;
+    remainder*=pow(10,right);
+    w = (int)Math.floor(remainder);
+    result+=String.valueOf(w);
+    for(int wLen = String.valueOf(w).length();wLen<right;wLen++) result+="0";
+    
+    return result;
+  }  
 };

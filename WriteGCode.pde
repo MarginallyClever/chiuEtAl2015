@@ -69,7 +69,7 @@ class WriteGCode {
     f = createWriter(filename);
     f.println("; "+year()+"-"+month()+"-"+day()+" chiuEtAl2015");
     f.println("G28");
-    f.println("G0 Z"+nf2(zUp,0,0);
+    f.println("G0 Z"+nf2(zUp,0,0));
     index=0;
   }
   
@@ -120,7 +120,8 @@ class WriteGCode {
     String result="";
     int w = (int)Math.floor(number);
     // pad left
-    for(int wLen = String.valueOf(w).length();wLen<left;wLen++) result+=" ";
+    for(int wLen = String.valueOf(w).length();wLen<left;wLen++) result+=" "; //<>//
+    result+=String.valueOf(w);
     // decimal
     result+=".";
     // pad right

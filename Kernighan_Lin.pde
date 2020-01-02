@@ -267,6 +267,9 @@ class Kernighan_Lin {
 
   boolean stepOptimize() {
     //println("test "+KLi);
+    int size=pointsOut.size()-2;
+    println("  "+(100.0*(size-1-KLi)/size)+"%");
+    
     int found=0; 
     for (; KLi<pointsOut.size()-2; ++KLi) {
       int w = KLi; 

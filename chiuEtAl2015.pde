@@ -26,26 +26,28 @@ boolean toneControlOn;
 // METHODS
 
 void setup() {
+  size(800,800);  // size of the window
+
   // CHANGE ME: choose any one of these for a starter image, or use your own.
   // The size(x,y) should match the size of your image.
-  //size(267,266);  img = loadImage("mandrill.jpg");
-  size(800,800);  img = loadImage("A4000x2135.jpg");
-  //size(736,825);  img = loadImage("elon smoking.jpg");
-  //size(210,377);  img = loadImage("elon smoking 2.jpg");
-  //size(2000,1266);  img = loadImage("2JOOhneHimmel.jpg");
-  //size(668,668);  img = loadImage("cropped.jpg");
-  //size(608,608);  img = loadImage("mona-lisa.jpg");
-  //size(648,648);  img = loadImage("morenaBaccarin.jpg");
-  //size(588,730);  img = loadImage("phillipineEagle.jpg");
-  //size(956,956);  img = loadImage("shortHair.jpg");
+  //img = loadImage("mandrill.jpg");
+  img = loadImage("A4000x2135.jpg");
+  //img = loadImage("elon smoking.jpg");
+  //img = loadImage("elon smoking 2.jpg");
+  //img = loadImage("2JOOhneHimmel.jpg");
+  //img = loadImage("cropped.jpg");
+  //img = loadImage("mona-lisa.jpg");
+  //img = loadImage("morenaBaccarin.jpg");
+  //img = loadImage("phillipineEagle.jpg");
+  //img = loadImage("shortHair.jpg");
   
   // CHANGE ME: parameters here control each step
-  wangTiles = new WangTiles(80000);  // estimated maximum number of points
+  wangTiles = new WangTiles(40000);  // estimated maximum number of points
   kMeans = new KMeans(14,20,30);  // sqrt(clusters)[14],M(1...40)[20],max iterations.  Probably don't change this.
   delaunayTriangulation = new DelaunayTriangulation(); 
   kernighanLin = new Kernighan_Lin();
   // Drawing controls.  Angular velocity (degrees), max spiral radius, minimum spiral radius,max center velocity,min center velocity
-  scribbler = new CircularScribbler(20,10,3,2.5,0.2);
+  scribbler = new CircularScribbler(20,20,6,5,0.4);
   // where to write the gcode, pen up angle [0-180], pen down angle [0-180].
   // Up and down values MUST match the values in your makelangelo robot settings > pen tab. 
   // A2 size is 420x592mm

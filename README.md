@@ -21,9 +21,10 @@ Adjust parameters in setup() to see different effects.
 
 At the top of setup() you will see
 
-    size(512,512);  img = loadImage("lenna.png");
+    size(512,512);
+    img = loadImage("lenna.png");
 
-Change the size values to match the size of your image file and "lenna.png" to your image file.
+size(w,h) will open a window w wide and h high.  it does not have to match your image size.  Your image file goes instead of lenna.png.
 
     writeGCode = new WriteGCode("output.ngc");
 
@@ -31,16 +32,18 @@ Change "output.ngc" to the destination for your gcode file.
 
     wangTiles = new WangTiles(10000);
 
-Is a good starting number.  Later you can raise this.  In very large images in the original paper it went as high as 100k.
-Start low to try many variations.
+10000 is the approximate number of points that will be put across the image.  Larger images need more points to be accurately represented.
+
+toneControl(x)  adjusts the tone of the image for better representation in a black and white medium.  it's detailed in the original paper.the 1-v are there because black is represented as 0 and white as 1.  we want the opposite for the tone control to work.  Feel free to try removing both 1-v and see what happens!  (use a small image to save time).
 
     scribbler = new CircularScribbler(20,10,3,2.5,0.2);
 
-20 is the number of segments per loop, in degrees.  the higher the number, the lower the quality.
+20 is the number of segments per loop, in degrees.  as this number goes up the quality goes down, but so does the size of the output file.
 10,3 control the max/min size of the loops.  lighter areas, bigger loops.
 2.5,0.2 are the max/min speed of the loops.  lighter areas, faster loops.
+If the picture gets bigger and the loop sizes are not changed then the loops will appear smaller.
 
-Experiment with these numbers to get a good feel.
+Experiment with these numbers to get a good feel, and please share your results!
 
 ## Legal
 

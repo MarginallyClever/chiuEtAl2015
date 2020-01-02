@@ -29,7 +29,8 @@ void setup() {
   // CHANGE ME: choose any one of these for a starter image, or use your own.
   // The size(x,y) should match the size of your image.
   //size(267,266);  img = loadImage("mandrill.jpg");
-  size(736,825);  img = loadImage("elon smoking.jpg");
+  size(800,800);  img = loadImage("A4000x2135.jpg");
+  //size(736,825);  img = loadImage("elon smoking.jpg");
   //size(210,377);  img = loadImage("elon smoking 2.jpg");
   //size(2000,1266);  img = loadImage("2JOOhneHimmel.jpg");
   //size(668,668);  img = loadImage("cropped.jpg");
@@ -39,7 +40,7 @@ void setup() {
   //size(956,956);  img = loadImage("shortHair.jpg");
   
   // CHANGE ME: parameters here control each step
-  wangTiles = new WangTiles(20000);  // estimated maximum number of points
+  wangTiles = new WangTiles(80000);  // estimated maximum number of points
   kMeans = new KMeans(14,20,30);  // sqrt(clusters)[14],M(1...40)[20],max iterations.  Probably don't change this.
   delaunayTriangulation = new DelaunayTriangulation(); 
   kernighanLin = new Kernighan_Lin();
@@ -142,17 +143,17 @@ float sampleLuminosityOld(float x,float y) {
   if(x>0) {
     if(y>0       ) { sum += sampleImageAt((int)x-1,(int)y-1) * 1.0;  count+=1; }
                    { sum += sampleImageAt((int)x-1,(int)y  ) * 3.0;  count+=3; }
-    if(y<height-1) { sum += sampleImageAt((int)x-1,(int)y+1) * 1.0;  count+=1; }
+    if(y<img.height-1) { sum += sampleImageAt((int)x-1,(int)y+1) * 1.0;  count+=1; }
   }
   // middle
     if(y>0       ) { sum += sampleImageAt((int)x  ,(int)y-1) * 3.0;  count+=3; }*/
                    { sum += sampleImageAt((int)x  ,(int)y  ) * 5.0;  count+=5; }/*
     if(y<height-1) { sum += sampleImageAt((int)x  ,(int)y+1) * 3.0;  count+=3; }
   // bottom
-  if(x<width-1) {
+  if(x<img.width-1) {
     if(y>0       ) { sum += sampleImageAt((int)x+1,(int)y-1) * 1.0;  count+=1; }
                    { sum += sampleImageAt((int)x+1,(int)y  ) * 3.0;  count+=3; }
-    if(y<height-1) { sum += sampleImageAt((int)x+1,(int)y+1) * 1.0;  count+=1; }
+    if(y<img.height-1) { sum += sampleImageAt((int)x+1,(int)y+1) * 1.0;  count+=1; }
   }*/
   
   float v = toneControl(sum/count)*255.0;

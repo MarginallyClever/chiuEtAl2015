@@ -219,7 +219,7 @@ class PoissonDisk {
                        int gwidth, int gheight,
                        Point2D p, float radius) {
     /* Make sure the point is on the screen */
-    if (p.x < 0 || p.x >= width || p.y < 0 || p.y >= height)
+    if (p.x < 0 || p.x >= img.width || p.y < 0 || p.y >= img.height)
       return false;
   
     /* Check neighboring eight cells */
@@ -253,13 +253,13 @@ class PoissonDisk {
     /* The currently "active" set of points */
     ArrayList<Point2D> active = new ArrayList<Point2D>();
     /* Initial point p0 */
-    Point2D p0 = new Point2D(random(width), random(height));
+    Point2D p0 = new Point2D(random(img.width), random(img.height));
     Point2D[][] grid;
     float cellsize = floor(radius/sqrt(N));
   
     /* Figure out no. of cells in the grid for our canvas */
-    int ncells_width = ceil(width/cellsize) + 1;
-    int ncells_height = ceil(height/cellsize) + 1;
+    int ncells_width = ceil(img.width/cellsize) + 1;
+    int ncells_height = ceil(img.height/cellsize) + 1;
   
     /* Allocate the grid an initialize all elements to null */
     grid = new Point2D[ncells_width][ncells_height];

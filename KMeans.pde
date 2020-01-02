@@ -27,7 +27,7 @@ class KMeans {
   
   void prepare(ArrayList<Point2D> arg0) {
     println("KMeans begin");
-    N = width*height;
+    N = img.width*img.height;
     S = sqrt( (float)N / (float)NUM_CLUSTERS ); 
   
     pointsIn = arg0;
@@ -77,8 +77,8 @@ class KMeans {
       
       int j=0;
       int c = (int)sqrt(NUM_CLUSTERS);
-      float w = width/(float)c;
-      float h = height/(float)c;
+      float w = img.width/(float)c;
+      float h = img.height/(float)c;
       for(int y=0;y<c;++y) {
         for(int x=0;x<c;++x) {
           clustersOut.add(new Point2D(x*w+w/2,y*h+h/2,j++));

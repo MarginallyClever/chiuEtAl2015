@@ -7,27 +7,17 @@ class WriteGCode {
   // CHANGE ME: pen angles for up and down.
   double zUp=90;
   double zDown=40;
-  // CHANGE ME: A2 size is 420x592mm
-  double paperWidth=736;
-  double paperHeight=825;
-  double paperMargin=0.9;  // CHANGE ME: 0.9=90% drawable or 10% border
   
   /**
    * Setup parameters for the gcode.
    * The image will be scaled to these dimensions, regardless of the original aspect ratio.
    * The up and down values MUST match the values in your makelangelo robot settings.
    * @param outputName name of file where gcode will be saved
-   * @param w width of output.
-   * @param h height of output.
-   * @param m margin %
    * @param up z height when pen is up
    * @param down z height when pen is down
    */
   WriteGCode(String outputName,double up,double down) {
     filename=outputName;
-    paperWidth=width;
-    paperHeight=height;
-    paperMargin=1;
     zUp=up;
     zDown=down;
   }
@@ -36,30 +26,18 @@ class WriteGCode {
     println("WriteGCode begin");
     pointsIn=arg0;
     
-    if(paperHeight<paperWidth) {
-      double testWidth = paperHeight*width/height;
-      if(testWidth>paperWidth) {
-        paperHeight = testWidth*height/width;
-      }
-    } else {
-      double testHeight = paperWidth*height/width;
-      if(testHeight>paperHeight) {
-        paperWidth = testHeight*width/height;
-      }
-    }
-    
     // write out gcode to trace the edge of the drawing
     println("Writing border.ngc");
     f = createWriter("border.ngc");
     f.println("; "+year()+"-"+month()+"-"+day()+" chiuEtAl2015");
     f.println("G28");
     f.println("G0 Z"+zUp);
-    f.println("G0 X"+tx(    0)+" Y"+ty(     0)+"");
+    f.println("G0 X"+tx(        0)+" Y"+ty(         0)+"");
     f.println("G0 Z"+nf2(zDown,0,0));
-    f.println("G0 X"+tx(width)+" Y"+ty(     0)+"");
-    f.println("G0 X"+tx(width)+" Y"+ty(height)+"");
-    f.println("G0 X"+tx(    0)+" Y"+ty(height)+"");
-    f.println("G0 X"+tx(    0)+" Y"+ty(     0)+"");
+    f.println("G0 X"+tx(img.width)+" Y"+ty(         0)+"");
+    f.println("G0 X"+tx(img.width)+" Y"+ty(img.height)+"");
+    f.println("G0 X"+tx(        0)+" Y"+ty(img.height)+"");
+    f.println("G0 X"+tx(        0)+" Y"+ty(         0)+"");
     f.println("G0 Z"+nf2(zUp,0,0));
     f.flush();
     f.close();
@@ -104,13 +82,13 @@ class WriteGCode {
   }
   
   String tx(double x) {
-    double fromCenter = x-((double)width/2.0);
+    double fromCenter = x-((double)img.width/2.0);
     float v=(float)( fromCenter ); 
     return nf2(v,0,2);
   }
   
   String ty(double y) {
-    double fromCenter = ((double)height/2.0)-y;
+    double fromCenter = ((double)img.height/2.0)-y;
     float v=(float)( fromCenter ); 
     return nf2(v,0,2);
   }

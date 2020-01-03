@@ -49,7 +49,7 @@ class CircularScribbler {
     pi=0;
     
     background(255);
-    strokeWeight(1);
+    strokeWeight(4);
     stroke(0);
   }
   

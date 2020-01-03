@@ -7,6 +7,7 @@
 //
 // see also https://en.wikipedia.org/wiki/Kernighan%E2%80%93Lin_algorithm
 
+import java.util.Locale;
 
 // CONSTANTS
 
@@ -21,18 +22,17 @@ DelaunayTriangulation delaunayTriangulation;
 CircularScribbler scribbler;
 WriteGCode writeGCode;
 int mode;
-boolean toneControlOn;
 
 // METHODS
 
 void setup() {
-  size(800,800);  // size of the window
+  size(1040,1040, P2D);  // size of the window
 
   // CHANGE ME: choose any one of these for a starter image, or use your own.
   // The size(x,y) should match the size of your image.
   //img = loadImage("mandrill.jpg");
-  img = loadImage("A4000x2135.jpg");
-  //img = loadImage("elon smoking.jpg");
+  //img = loadImage("A4000x2135.jpg");
+  img = loadImage("elon smoking.jpg");
   //img = loadImage("elon smoking 2.jpg");
   //img = loadImage("2JOOhneHimmel.jpg");
   //img = loadImage("cropped.jpg");
@@ -40,22 +40,33 @@ void setup() {
   //img = loadImage("morenaBaccarin.jpg");
   //img = loadImage("phillipineEagle.jpg");
   //img = loadImage("shortHair.jpg");
+
+  // adjust the luminosity once for everywhere.  much faster.
+  adjustTone();
   
+  Locale.setDefault(Locale.US);
+  
+  if(img.width > img.height) {
+    int v = (int)( (float)img.height * 1000.0 / (float)img.width );
+    img.resize(1000,v);
+  } else {
+    int v = (int)( (float)img.width * 1000.0 / (float)img.height );
+    img.resize(v,1000);
+  }
+
   // CHANGE ME: parameters here control each step
-  wangTiles = new WangTiles(40000);  // estimated maximum number of points
+  wangTiles = new WangTiles(30000);  // estimated maximum number of points
   kMeans = new KMeans(14,20,30);  // sqrt(clusters)[14],M(1...40)[20],max iterations.  Probably don't change this.
   delaunayTriangulation = new DelaunayTriangulation(); 
   kernighanLin = new Kernighan_Lin();
   // Drawing controls.  Angular velocity (degrees), max spiral radius, minimum spiral radius,max center velocity,min center velocity
-  scribbler = new CircularScribbler(20,20,6,5,0.4);
+  scribbler = new CircularScribbler(10,15,3,3,0.1);
   // where to write the gcode, pen up angle [0-180], pen down angle [0-180].
   // Up and down values MUST match the values in your makelangelo robot settings > pen tab. 
   // A2 size is 420x592mm
   writeGCode = new WriteGCode("output.ngc",90,30);
   
-  toneControlOn=true;
-  
-  smooth(2);
+  smooth(1);
   noFill();
   img.filter(GRAY);
   mode=0;
@@ -90,25 +101,33 @@ void clusterColor(int j) {
   float v = (float)(j+1) / (float)kMeans.NUM_CLUSTERS; // (0...1]
   rainbowColor(v);
 }
-  
+
 
 // white (255) should be 0.
 // black (  0) should be 1.
-float sampleImageAt(int x,int y) {
+float sampleImageAt(float x,float y) {
   // it's a greyscale image, any channel will do.
-  float i = red( img.get(x,y) );
+  float i = 255 - red( img.get((int)x,(int)y) );
   // invert and scale
-  return (255.0-i)/255.0;
+  i/=255;
+  return  min(1,max(0,i));
 }
 
 
 float toneControl(float v) {
-  if(toneControlOn) {
-    v=1-v;
-    v = 0.017 * exp(3.29*v)+0.005 * exp(7.27*v);
-    v=1-v;
+  v = 0.017 * exp(3.29*v)+0.005 * exp(7.27*v);
+  return min(1,max(0,v));
+}
+
+void adjustTone() {
+  img.loadPixels();
+  for(int i=0;i<img.width*img.height;++i) {
+    float v = img.pixels[i] & 0xff;
+    int v2 = (int)(toneControl(v/255.0)*255.0);
+    int rgb = min(255,max(0,v2));
+    img.pixels[i] = color(rgb,rgb,rgb);
   }
-  return min(1.0,max(0,v));
+  img.updatePixels();
 }
 
 
@@ -127,8 +146,7 @@ float sampleLuminosity(float x,float y) {
     sampleImageAt(ix  ,iy+1)*(1-tx)*(  ty) + 
     sampleImageAt(ix+1,iy+1)*(  tx)*(  ty);
   
-  float v = toneControl(sample);
-  return max(min(v,1),0);
+  return sample;
 }
 
 
@@ -158,12 +176,13 @@ float sampleLuminosityOld(float x,float y) {
     if(y<img.height-1) { sum += sampleImageAt((int)x+1,(int)y+1) * 1.0;  count+=1; }
   }*/
   
-  float v = toneControl(sum/count)*255.0;
-  return max(min(v,255),0);
+  return sum/count;
 }
 
 
 void draw() {
+  translate(-520,-520);
+  scale(5);
   switch(mode) {
     case 0:
       image(img,0,0);

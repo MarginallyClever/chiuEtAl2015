@@ -31,7 +31,7 @@ class WriteGCode {
     f = createWriter("border.ngc");
     f.println("; "+year()+"-"+month()+"-"+day()+" chiuEtAl2015");
     f.println("G28");
-    f.println("G0 Z"+zUp);
+    f.println("G0 Z"+nf2(zUp,0,0));
     f.println("G0 X"+tx(        0)+" Y"+ty(         0)+"");
     f.println("G0 Z"+nf2(zDown,0,0));
     f.println("G0 X"+tx(img.width)+" Y"+ty(         0)+"");
@@ -84,19 +84,19 @@ class WriteGCode {
   String tx(double x) {
     double fromCenter = x-((double)img.width/2.0);
     float v=(float)( fromCenter ); 
-    return nf2(v,0,2);
+    return nf(v,0,2);
   }
   
   String ty(double y) {
     double fromCenter = ((double)img.height/2.0)-y;
     float v=(float)( fromCenter ); 
-    return nf2(v,0,2);
+    return nf(v,0,2);
   }
   
   // replace default nf() with one that doesn't add european conventions.
-  String nf2(double number,int left,int right) {
+  String nf2(double number,int left,int right) {/*
     String result="";
-    int w = (int)Math.floor(number);
+    int w = (int)number;
     // pad left
     for(int wLen = String.valueOf(w).length();wLen<left;wLen++) result+=" "; //<>//
     result+=String.valueOf(w);
@@ -105,10 +105,11 @@ class WriteGCode {
     // pad right
     double remainder = number - w;
     remainder*=pow(10,right);
-    w = (int)Math.floor(remainder);
+    w = (int)Math.abs(remainder);
     result+=String.valueOf(w);
     for(int wLen = String.valueOf(w).length();wLen<right;wLen++) result+="0";
-    
+    */
+    String result = nf((float)number,left,right);
     return result;
   }  
 };

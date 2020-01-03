@@ -23,6 +23,9 @@ CircularScribbler scribbler;
 WriteGCode writeGCode;
 int mode;
 
+int maxSize=4000;
+float scaleNow=1;
+
 // METHODS
 
 void setup() {
@@ -42,17 +45,20 @@ void setup() {
   //img = loadImage("shortHair.jpg");
 
   // adjust the luminosity once for everywhere.  much faster.
+  img.filter(GRAY);
   adjustTone();
-  
+  // set number format to US.
   Locale.setDefault(Locale.US);
   
   if(img.width > img.height) {
-    int v = (int)( (float)img.height * 1000.0 / (float)img.width );
-    img.resize(1000,v);
+    int v = (int)( (float)img.height * (float)maxSize / (float)img.width );
+    img.resize(maxSize,v);
   } else {
-    int v = (int)( (float)img.width * 1000.0 / (float)img.height );
-    img.resize(v,1000);
+    int v = (int)( (float)img.width * (float)maxSize / (float)img.height );
+    img.resize(v,maxSize);
   }
+  
+  scaleNow = (float)width / (float)maxSize;
 
   // CHANGE ME: parameters here control each step
   wangTiles = new WangTiles(30000);  // estimated maximum number of points
@@ -60,7 +66,7 @@ void setup() {
   delaunayTriangulation = new DelaunayTriangulation(); 
   kernighanLin = new Kernighan_Lin();
   // Drawing controls.  Angular velocity (degrees), max spiral radius, minimum spiral radius,max center velocity,min center velocity
-  scribbler = new CircularScribbler(10,15,3,3,0.1);
+  scribbler = new CircularScribbler(10,50,12,15,0.9);
   // where to write the gcode, pen up angle [0-180], pen down angle [0-180].
   // Up and down values MUST match the values in your makelangelo robot settings > pen tab. 
   // A2 size is 420x592mm
@@ -68,7 +74,6 @@ void setup() {
   
   smooth(1);
   noFill();
-  img.filter(GRAY);
   mode=0;
   wangTiles.prepare();
 }
@@ -181,8 +186,9 @@ float sampleLuminosityOld(float x,float y) {
 
 
 void draw() {
-  translate(-520,-520);
-  scale(5);
+  scale(scaleNow);
+  //translate(20,20);
+  
   switch(mode) {
     case 0:
       image(img,0,0);

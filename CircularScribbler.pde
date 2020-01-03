@@ -34,10 +34,9 @@ class CircularScribbler {
   // METHODS
   
   CircularScribbler(float angularVelocityDegrees,float rMax,float rMin,float cvMax,float cvMin) {
-    ANGULAR_VELOCITY_RAD =radians(angularVelocityDegrees);
+    ANGULAR_VELOCITY_RAD = radians(angularVelocityDegrees);
     CVMAX = ANGULAR_VELOCITY_RAD * cvMax;
     CVMIN = ANGULAR_VELOCITY_RAD * cvMin;
-    
     RMAX=rMax;
     RMIN=rMin;
   }
@@ -55,20 +54,18 @@ class CircularScribbler {
   }
   
   void render() {
-    Point2D prev=null;
+    beginShape();
     for( int i = drawFirst;i<drawLast;++i) {
       Point2D pk = pointsOut.get(i);
-      if(prev!=null) {
-        line(prev.x,prev.y,pk.x,pk.y);
-      }
-      prev=pk;
+      vertex(pk.x,pk.y);
     }
+    endShape();
     drawFirst=0;
     drawLast=pointsOut.size();
   }
   
   boolean step() {
-    int count = pointsIn.size()/200;
+    int count = pointsIn.size()/100;
     
     drawFirst=pointsOut.size();
     if(drawFirst>0) drawFirst--;

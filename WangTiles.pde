@@ -159,7 +159,7 @@ class WangTileMachine {
         continue;
   
       // reject point based on its rank
-      if (sampleLuminosity(px*img.width,py*img.height) < i*factor)
+      if (sampleImageAt(px*img.width,py*img.height) < i*factor)
         continue;
   
       // "draw" point
@@ -194,7 +194,7 @@ class WangTileMachine {
         continue;
   
       // reject point based on its rank
-      if (sampleLuminosity(px*img.width,py*img.height) < (i+t.numPoints)*factor)
+      if (sampleImageAt(px*img.width,py*img.height) < (i+t.numPoints)*factor)
         continue;
   
       // "draw" point
@@ -364,7 +364,7 @@ class WangTiles {
   }
 }
 
-class WangTilesPoisson {
+class PoissonStipples {
   // VARIABLES
   
   float RADIUS = 4;
@@ -373,7 +373,7 @@ class WangTilesPoisson {
   
   // METHODS
   
-  WangTilesPoisson(float arg0) {
+  PoissonStipples(float arg0) {
     RADIUS = arg0;
   }
   
@@ -425,7 +425,6 @@ class WangTilesPoisson {
   }
   
   void finish() {
-    toneControlOn=false;
     PrintWriter output = createWriter(sketchPath("wangTiles.txt"));
     for( Point2D p : pointsOut ) {
       output.println(p.x+"\t"+p.y);

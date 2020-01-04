@@ -35,14 +35,14 @@ void setup() {
   // The size(x,y) should match the size of your image.
   //img = loadImage("mandrill.jpg");
   //img = loadImage("A4000x2135.jpg");
-  img = loadImage("elon smoking.jpg");
+  //img = loadImage("elon smoking.jpg");
   //img = loadImage("elon smoking 2.jpg");
   //img = loadImage("2JOOhneHimmel.jpg");
   //img = loadImage("cropped.jpg");
   //img = loadImage("mona-lisa.jpg");
   //img = loadImage("morenaBaccarin.jpg");
   //img = loadImage("phillipineEagle.jpg");
-  //img = loadImage("shortHair.jpg");
+  img = loadImage("shortHair.jpg");
 
   // adjust the luminosity once for everywhere.  much faster.
   img.filter(GRAY);
@@ -61,16 +61,16 @@ void setup() {
   scaleNow = (float)width / (float)maxSize;
 
   // CHANGE ME: parameters here control each step
-  wangTiles = new WangTiles(30000);  // estimated maximum number of points
+  wangTiles = new WangTiles(40000);  // estimated maximum number of points
   kMeans = new KMeans(14,20,30);  // sqrt(clusters)[14],M(1...40)[20],max iterations.  Probably don't change this.
   delaunayTriangulation = new DelaunayTriangulation(); 
   kernighanLin = new Kernighan_Lin();
   // Drawing controls.  Angular velocity (degrees), max spiral radius, minimum spiral radius,max center velocity,min center velocity
-  scribbler = new CircularScribbler(10,50,12,15,0.9);
+  scribbler = new CircularScribbler(10,(float)maxSize/50.f,13,10,1.f/2.f);
   // where to write the gcode, pen up angle [0-180], pen down angle [0-180].
   // Up and down values MUST match the values in your makelangelo robot settings > pen tab. 
   // A2 size is 420x592mm
-  writeGCode = new WriteGCode("output.ngc",90,30);
+  writeGCode = new WriteGCode("output.ngc",90,40);
   
   smooth(1);
   noFill();
@@ -137,7 +137,7 @@ void adjustTone() {
 
 
 // use linear interpolation to sample between pixels
-float sampleLuminosity(float x,float y) {
+float sampleLuminosityNew(float x,float y) {
   float tx=x;
   float ty=y;
   int ix=max(min(floor(tx),img.width -2),0);
@@ -156,14 +156,14 @@ float sampleLuminosity(float x,float y) {
 
 
 // average over several neighboring points
-float sampleLuminosityOld(float x,float y) {
+float sampleLuminosity(float x,float y) {
   // image source.
   // 1 3 1 = 5
   // 3 5 3 = 11
   // 1 3 1 = 5
   //       = 21
   float sum=0;
-  float count=0;/*
+  float count=0;
   
   if(x>0) {
     if(y>0       ) { sum += sampleImageAt((int)x-1,(int)y-1) * 1.0;  count+=1; }
@@ -171,15 +171,15 @@ float sampleLuminosityOld(float x,float y) {
     if(y<img.height-1) { sum += sampleImageAt((int)x-1,(int)y+1) * 1.0;  count+=1; }
   }
   // middle
-    if(y>0       ) { sum += sampleImageAt((int)x  ,(int)y-1) * 3.0;  count+=3; }*/
-                   { sum += sampleImageAt((int)x  ,(int)y  ) * 5.0;  count+=5; }/*
+    if(y>0       ) { sum += sampleImageAt((int)x  ,(int)y-1) * 3.0;  count+=3; }
+                   { sum += sampleImageAt((int)x  ,(int)y  ) * 5.0;  count+=5; }
     if(y<height-1) { sum += sampleImageAt((int)x  ,(int)y+1) * 3.0;  count+=3; }
   // bottom
   if(x<img.width-1) {
     if(y>0       ) { sum += sampleImageAt((int)x+1,(int)y-1) * 1.0;  count+=1; }
                    { sum += sampleImageAt((int)x+1,(int)y  ) * 3.0;  count+=3; }
     if(y<img.height-1) { sum += sampleImageAt((int)x+1,(int)y+1) * 1.0;  count+=1; }
-  }*/
+  }
   
   return sum/count;
 }

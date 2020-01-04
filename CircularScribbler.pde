@@ -26,6 +26,7 @@ class CircularScribbler {
   ArrayList<Point2D> pointsIn, pointsOut;
   // point index (for incremental stepping)
   int pi;
+  int ps;
   // last angle (to connect scribbles)
   float angle=0;
 
@@ -46,16 +47,19 @@ class CircularScribbler {
     
     pointsIn = arg0;
     pointsOut = new ArrayList<Point2D>();
+    drawFirst=drawLast=0;
     pi=0;
+    ps=pointsIn.size();
     
     background(255);
     strokeWeight(4);
-    stroke(0);
+    stroke(96);
+    blendMode(SUBTRACT);
   }
   
   void render() {
     beginShape();
-    for( int i = drawFirst;i<drawLast;++i) {
+    for( int i=drawFirst; i<drawLast; ++i ) {
       Point2D pk = pointsOut.get(i);
       vertex(pk.x,pk.y);
     }
@@ -67,10 +71,9 @@ class CircularScribbler {
   boolean step() {
     int count = pointsIn.size()/100;
     
-    drawFirst=pointsOut.size();
-    if(drawFirst>0) drawFirst--;
+    drawFirst=drawLast;
+    //if(drawFirst>0) drawFirst--;
 
-    int ps=pointsIn.size();
     for(int i=0;i<count;++i) {
       if(pi<ps) {
         scribbleLine(pi,(pi+1)%ps);

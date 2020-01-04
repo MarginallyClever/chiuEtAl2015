@@ -364,6 +364,7 @@ class WangTiles {
   }
 }
 
+
 class PoissonStipples {
   // VARIABLES
   

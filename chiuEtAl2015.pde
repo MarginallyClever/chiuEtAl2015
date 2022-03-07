@@ -26,7 +26,17 @@ int mode;
 int maxSize=4000;
 float scaleNow=1;
 
+String sourceName = "";
+
 // METHODS
+
+PImage prepareImage(String filename) {
+  if(filename.indexOf('.')!= -1) {
+    sourceName = filename.substring(0, filename.lastIndexOf('.')) + '-';
+  }
+  return loadImage(filename);
+}
+
 
 void setup() {
   size(1040,1040, P2D);  // size of the window
@@ -77,7 +87,7 @@ void setup() {
   mode=0;
   wangTiles.prepare();
 }
-
+ 
 
 // (0...1]
 void rainbowColor(float zeroToOne) {

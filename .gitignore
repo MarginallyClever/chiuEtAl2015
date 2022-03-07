@@ -10,8 +10,6 @@ application.macosx
 out
 kMeansClusters.txt
 kMeansPoints.txt
-kMeansClusters.txt
-kMeansPoints.txt
-output.ngc
 wangTiles.txt
-*.txt
+kernighanLin.txt
+*.ngc

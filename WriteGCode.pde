@@ -13,16 +13,16 @@ class WriteGCode {
    * The image will be scaled to these dimensions, regardless of the original aspect ratio.
    * The up and down values MUST match the values in your makelangelo robot settings.
    * @param outputName name of file where gcode will be saved
-   * @param up z height when pen is up
-   * @param down z height when pen is down
+   * @param upAngle z height when pen is up
+   * @param downAngle z height when pen is down
    */
-  WriteGCode(String outputName,double up,double down) {
+  public WriteGCode(String outputName,double upAngle,double downAngle) {
     filename=outputName;
-    zUp=up;
-    zDown=down;
+    zUp=upAngle;
+    zDown=downAngle;
   }
   
-  void prepare(ArrayList<Point2D> arg0) {
+  public void prepare(ArrayList<Point2D> arg0) {
     println("WriteGCode begin");
     pointsIn=arg0;
     
@@ -94,21 +94,7 @@ class WriteGCode {
   }
   
   // replace default nf() with one that doesn't add european conventions.
-  String nf2(double number,int left,int right) {/*
-    String result="";
-    int w = (int)number;
-    // pad left
-    for(int wLen = String.valueOf(w).length();wLen<left;wLen++) result+=" "; //<>//
-    result+=String.valueOf(w);
-    // decimal
-    result+=".";
-    // pad right
-    double remainder = number - w;
-    remainder*=pow(10,right);
-    w = (int)Math.abs(remainder);
-    result+=String.valueOf(w);
-    for(int wLen = String.valueOf(w).length();wLen<right;wLen++) result+="0";
-    */
+  String nf2(double number,int left,int right) { //<>//
     String result = nf((float)number,left,right);
     return result;
   }  

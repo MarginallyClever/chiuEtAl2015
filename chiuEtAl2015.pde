@@ -20,7 +20,8 @@ KMeans kMeans;
 Kernighan_Lin kernighanLin;
 DelaunayTriangulation delaunayTriangulation; 
 CircularScribbler scribbler;
-WriteGCode writeGCode;
+WriteGCode writeGCode = new WriteGCode("output.ngc",90,40);
+WriteSVG writeSVG = new WriteSVG("output.svg");
 int mode;
 
 int maxSize=4000;
@@ -80,7 +81,6 @@ void setup() {
   // where to write the gcode, pen up angle [0-180], pen down angle [0-180].
   // Up and down values MUST match the values in your makelangelo robot settings > pen tab. 
   // A2 size is 420x592mm
-  writeGCode = new WriteGCode("output.ngc",90,40);
   
   smooth(1);
   noFill();
@@ -255,15 +255,23 @@ void draw() {
         scribbler.render();
         scribbler.finish();
         writeGCode.prepare(scribbler.pointsOut);
+        writeSVG.prepare(scribbler.pointsOut);
         mode++;
       }
       break;
     case 5:
-      // write to jpg/gcode/dxf?  needs an output class.
       if(writeGCode.step()) {
         //scribbler.render();
       } else {
         writeGCode.finish();
+        mode++;
+      }
+      break;
+    case 6:
+      if(writeSVG.step()) {
+        //scribbler.render();
+      } else {
+        writeSVG.finish();
         mode++;
       }
       break;
